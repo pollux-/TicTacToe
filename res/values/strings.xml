@@ -9,5 +9,6 @@
     <string name="win_">"Win: %1$s"</string>
     <string name="loss_">"Loss: %1$s"</string>
     <string name="tie_">"Tie: %1$s"</string>
+    <string name="play">Play</string>
 
 </resources>

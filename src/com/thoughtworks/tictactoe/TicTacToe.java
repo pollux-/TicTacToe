@@ -40,6 +40,7 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 	private TextView mTie;
 
 	private Button mRest;
+	private Button mPlay;
 
 	private int mCrossImage = R.drawable.cross_green;
 	private int mDotImage = R.drawable.circle_gray;
@@ -52,9 +53,9 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 			R.id.button8, R.id.button9 };
 
 	private TicTacToeGameEngine mGameEngine;
-	private int mCurrentPlayer = FIRST_PLAYER;
-	private int mOpponentPlayer = FIRST_PLAYER;
-	private boolean mIsGameOver;
+
+	private int mCurrentPlayer = FIRST_PLAYER;	
+	private boolean mIsGameOver;	
 	private Score mScore;
 
 	@Override
@@ -71,8 +72,9 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 		mBox7 = (ImageButton) findViewById(R.id.button7);
 		mBox8 = (ImageButton) findViewById(R.id.button8);
 		mBox9 = (ImageButton) findViewById(R.id.button9);
+		mPlay = (Button) findViewById(R.id.play);
 
-		setListeners();
+		
 
 		mWinInfo = (TextView) findViewById(R.id.win_info);
 		mWin = (TextView) findViewById(R.id.win);
@@ -84,25 +86,10 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 		resetScore();
 
 		mScore = new Score();
+		
+		setListeners();
 
-		mRest.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				setListeners();
-				mCurrentPlayer = FIRST_PLAYER;
-				mOpponentPlayer = FIRST_PLAYER;
-				mGameEngine = new TicTacToeGameEngine();
-				mScore = new Score();
-				resetBoxStatus();
-				mWinInfo.setText("");
-				resetScore();
-				mIsGameOver = false;
-
-			}
-
-		});
+		
 
 	}
 
@@ -116,6 +103,41 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 		mBox7.setOnClickListener(this);
 		mBox8.setOnClickListener(this);
 		mBox9.setOnClickListener(this);
+		
+		mRest.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				setListeners();
+				mCurrentPlayer = FIRST_PLAYER;								
+				mGameEngine = new TicTacToeGameEngine();
+				mScore = new Score();
+				resetBoxStatus();
+				
+				resetScore();
+				mIsGameOver = false;
+			
+
+			}
+
+		});
+
+		mPlay.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				mGameEngine = new TicTacToeGameEngine();
+				resetBoxStatus();
+				mWinInfo.setText("");
+				mCurrentPlayer = FIRST_PLAYER;
+				mIsGameOver = false;			
+				mPlay.setVisibility(View.GONE);
+
+			}
+		});
+		
 	}
 
 	@Override
@@ -164,14 +186,15 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 			mWinInfo.setText("Draw match !!!");
 			disableBox();
 			mScore.tie = mScore.tie + 1;
-
-			setScore();
+			setScore();		
+			mPlay.setVisibility(View.VISIBLE);
 
 		}
 
 	}
 
 	private void updateBox(int player, ImageButton box, int position) {
+		
 		if (player == FIRST_PLAYER) {
 			box.setBackgroundResource(mCrossImage);
 			mCurrentPlayer = SECOND_PLAYER;
@@ -183,18 +206,22 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 		box.setEnabled(false);
 
 		if (mGameEngine.isWinMove(player, position)) {
-			mWinInfo.setText("Winner: Player: " + player);
+			if (player == FIRST_PLAYER)
+				mWinInfo.setText("You Won !!");
+			else
+				mWinInfo.setText("I Won !!");
 			mIsGameOver = true;
 			disableBox();
 			higlightWinning(mGameEngine.getWinMovePosition(player, position),
 					player);
 
-			if (player == mOpponentPlayer)
+			if (player == FIRST_PLAYER)
 				mScore.win = mScore.win + 1;
 			else
 				mScore.loss = mScore.loss + 1;
 
 			setScore();
+			mPlay.setVisibility(View.VISIBLE);
 
 		}
 
@@ -213,6 +240,8 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 		mWin.setText(getString(R.string.win_, 0));
 		mLoss.setText(getString(R.string.loss_, 0));
 		mTie.setText(getString(R.string.tie_, 0));
+		
+		mWinInfo.setText("");
 
 	}
 
