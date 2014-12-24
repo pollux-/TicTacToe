@@ -35,6 +35,9 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 	private ImageButton mBox9;
 
 	private TextView mWinInfo;
+	private TextView mWin;
+	private TextView mLoss;
+	private TextView mTie;
 
 	private Button mRest;
 
@@ -50,7 +53,9 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 
 	private TicTacToeGameEngine mGameEngine;
 	private int mCurrentPlayer = FIRST_PLAYER;
+	private int mOpponentPlayer = FIRST_PLAYER;
 	private boolean mIsGameOver;
+	private Score mScore;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +75,15 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 		setListeners();
 
 		mWinInfo = (TextView) findViewById(R.id.win_info);
+		mWin = (TextView) findViewById(R.id.win);
+		mTie = (TextView) findViewById(R.id.tie);
+		mLoss = (TextView) findViewById(R.id.loss);
+
 		mRest = (Button) findViewById(R.id.reset);
 		mGameEngine = new TicTacToeGameEngine();
+		resetScore();
+
+		mScore = new Score();
 
 		mRest.setOnClickListener(new OnClickListener() {
 
@@ -80,9 +92,12 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 
 				setListeners();
 				mCurrentPlayer = FIRST_PLAYER;
+				mOpponentPlayer = FIRST_PLAYER;
 				mGameEngine = new TicTacToeGameEngine();
+				mScore = new Score();
 				resetBoxStatus();
 				mWinInfo.setText("");
+				resetScore();
 				mIsGameOver = false;
 
 			}
@@ -148,6 +163,10 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 		} else {
 			mWinInfo.setText("Draw match !!!");
 			disableBox();
+			mScore.tie = mScore.tie + 1;
+
+			setScore();
+
 		}
 
 	}
@@ -169,7 +188,31 @@ public class TicTacToe extends ActionBarActivity implements OnClickListener {
 			disableBox();
 			higlightWinning(mGameEngine.getWinMovePosition(player, position),
 					player);
+
+			if (player == mOpponentPlayer)
+				mScore.win = mScore.win + 1;
+			else
+				mScore.loss = mScore.loss + 1;
+
+			setScore();
+
 		}
+
+	}
+
+	private void setScore() {
+
+		mWin.setText(getString(R.string.win_, mScore.win));
+		mLoss.setText(getString(R.string.loss_, mScore.loss));
+		mTie.setText(getString(R.string.tie_, mScore.tie));
+
+	}
+
+	private void resetScore() {
+
+		mWin.setText(getString(R.string.win_, 0));
+		mLoss.setText(getString(R.string.loss_, 0));
+		mTie.setText(getString(R.string.tie_, 0));
 
 	}
 

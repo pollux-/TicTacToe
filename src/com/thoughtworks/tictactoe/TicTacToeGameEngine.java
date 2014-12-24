@@ -363,7 +363,7 @@ public class TicTacToeGameEngine {
 			
 			winPos[0] = convertRowColumnToPosition(0, 2);
 			winPos[1] = convertRowColumnToPosition(1,1);
-			winPos[2] = convertRowColumnToPosition(1, 0);	
+			winPos[2] = convertRowColumnToPosition(2, 0);	
 			
 			return winPos;
 			
