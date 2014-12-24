@@ -5,5 +5,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="reset">Reset</string>
+    <string name="score">SCORE</string>
+    <string name="win_">"Win: %1$s"</string>
+    <string name="loss_">"Loss: %1$s"</string>
+    <string name="tie_">"Tie: %1$s"</string>
 
 </resources>

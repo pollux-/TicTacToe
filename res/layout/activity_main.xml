@@ -128,13 +128,13 @@
 
     <TextView
         android:id="@+id/win_info"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button8"
         android:layout_marginTop="20dp"
-        android:layout_toRightOf="@+id/button7"
-        android:textColor="#afd9c8"
-        android:textSize="16sp" />
+        android:gravity="center"
+        android:textColor="#f7374b"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/reset"
@@ -146,5 +146,37 @@
         android:background="#624c47"
         android:text="@string/reset"
         android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/score_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/reset"
+        android:layout_below="@+id/reset"
+        android:layout_marginTop="28dp"
+        android:text="@string/score"
+        android:textColor="#f7374b"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/win"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/score_header"
+        android:layout_below="@+id/score_header" />
+
+    <TextView
+        android:id="@+id/loss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/win"
+        android:layout_below="@+id/win" />
+
+    <TextView
+        android:id="@+id/tie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/loss"
+        android:layout_below="@+id/loss" />
 
 </RelativeLayout>
