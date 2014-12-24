@@ -2,6 +2,7 @@ package com.thoughtworks.tictactoe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import android.util.Log;
 
@@ -9,13 +10,34 @@ import android.util.Log;
  * 
  * Contain the AI of the game for different Levels of decision making. TicTacToe
  * can be solved by using Three Levels of Logical steps.
- * 
- * First Level
- * 
+ * <p>
+ * #First Level
+ * <p>
  * 1) Can he makes three, Make it
- * 
+ * <p>
  * 2) Can opponent makes three, Prevent it
+ * <p>
+ * #Second Level
+ * <p>
  * 
+ * 1) Can Make double threat make it
+ * <p>
+ * 2) Can your opponent can make double threat prevent it.
+ * <p>
+ * #Third Level
+ * <p>
+ * 1) Can set up a double threat, Make it
+ * <p>
+ * 2) Can opponent can make double threat prevent it
+ * 
+ */
+/**
+ * @author sreekumar
+ *
+ */
+/**
+ * @author sreekumar
+ *
  */
 public class TicTacToeGameEngine {
 
@@ -53,6 +75,16 @@ public class TicTacToeGameEngine {
 		}
 	}
 
+	/**
+	 * 
+	 * Select the best slot for making a perfect Three. Thats going to be the
+	 * wining move.
+	 * 
+	 * 
+	 * @param player
+	 * @param freeBoxes
+	 * @return
+	 */
 	public int canMakeThree(int player, List<Box> freeBoxes) {
 
 		for (Box freeBox : freeBoxes) {
@@ -66,10 +98,22 @@ public class TicTacToeGameEngine {
 		return NONE_MATCH;
 
 	}
-	
-	
-	
 
+	public int canMakeDoubleThreat() {
+		return NONE_MATCH;
+	}
+
+	public int canSetUpDoubleThreat() {
+		return NONE_MATCH;
+	}
+
+	/**
+	 * Update the Board based on the player, marking @TicTacToeGameEngine member
+	 * mBoard with played value.
+	 * 
+	 * @param player
+	 * @param position
+	 */
 	public void updateMove(int player, int position) {
 
 		int row;
@@ -87,6 +131,12 @@ public class TicTacToeGameEngine {
 
 	}
 
+	/**
+	 * Get the best move available from the list of moves
+	 * 
+	 * @param player
+	 * @return
+	 */
 	public int getMovePosition(int player) {
 		List<Box> freeBoxes = new ArrayList<Box>();
 		for (int i = 0; i < 3; i++) {
@@ -114,14 +164,35 @@ public class TicTacToeGameEngine {
 			if (gameOverPos != NONE_MATCH)
 				return gameOverPos;
 
-			return convertRowColumnToPosition(freeBoxes.get(0).row,
-					freeBoxes.get(0).col);
+			final int pos = getRandom(freeBoxes.size());
+
+			return convertRowColumnToPosition(freeBoxes.get(pos).row,
+					freeBoxes.get(pos).col);
 		}
 
 		return NONE_MATCH;
 
 	}
 
+	/**
+	 * Trusting on a Random position, if most of the levels rules out..
+	 * 
+	 * @param max
+	 * @return
+	 */
+	private int getRandom(int max) {
+		Random rand = new Random();
+		return rand.nextInt(max);
+
+	}
+
+	/**
+	 * convert the @param i and @param j to Board indexes.
+	 * 
+	 * @param i
+	 * @param j
+	 * @return
+	 */
 	private int convertRowColumnToPosition(int i, int j) {
 
 		if (i == FIRST_ROW)
@@ -136,6 +207,12 @@ public class TicTacToeGameEngine {
 
 	}
 
+	/**
+	 * Convert the position to row and columns in the matrix
+	 * 
+	 * @param position
+	 * @return
+	 */
 	private int[][] convertPositionToRowAndColumn(int position) {
 
 		int[][] pos = new int[1][2];
@@ -161,6 +238,13 @@ public class TicTacToeGameEngine {
 
 	}
 
+	/**
+	 * Check he can win the Game
+	 * 
+	 * @param player
+	 * @param position
+	 * @return
+	 */
 	public boolean isWinMove(int player, int position) {
 
 		int row;
@@ -230,7 +314,7 @@ public class TicTacToeGameEngine {
 		if (row == col) {
 
 			if (CENTER_DIAGNAL == row && col == CENTER_DIAGNAL) {
-				if (/*isForwardDiagnalMatches() ||*/ isBackDiagnalMatches())
+				if (/* isForwardDiagnalMatches() || */isBackDiagnalMatches())
 					return true;
 
 			}
@@ -248,12 +332,15 @@ public class TicTacToeGameEngine {
 
 		return false;
 	}
-	
-	
-	
-	
-	
-	public int [] getWinMovePosition(int player, int position) {
+
+	/**
+	 * Get all the position for the player, after making the winning move.
+	 * 
+	 * @param player
+	 * @param position
+	 * @return
+	 */
+	public int[] getWinMovePosition(int player, int position) {
 
 		int row;
 		int col;
@@ -262,8 +349,8 @@ public class TicTacToeGameEngine {
 
 		row = pos[0][0];
 		col = pos[0][1];
-		
-		int winPos [] = new int[3];
+
+		int winPos[] = new int[3];
 		winPos[0] = convertRowColumnToPosition(row, col);
 
 		// Check Horizontally
@@ -271,28 +358,28 @@ public class TicTacToeGameEngine {
 		if (col == BEGIN_BOX) {
 			if (mBoard[row][col] == mBoard[row][col + 1]
 					&& mBoard[row][col + 1] == mBoard[row][col + 2]) {
-				
-				winPos[1] = convertRowColumnToPosition(row, col +1);
-				winPos[2] = convertRowColumnToPosition(row, col +2);
-				
+
+				winPos[1] = convertRowColumnToPosition(row, col + 1);
+				winPos[2] = convertRowColumnToPosition(row, col + 2);
+
 				return winPos;
 			}
 
 		} else if (col == MID_BOX) {
 			if (mBoard[row][col] == mBoard[row][col - 1]
 					&& mBoard[row][col] == mBoard[row][col + 1]) {
-				winPos[1] = convertRowColumnToPosition(row, col -1);
-				winPos[2] = convertRowColumnToPosition(row, col +1);
-				
+				winPos[1] = convertRowColumnToPosition(row, col - 1);
+				winPos[2] = convertRowColumnToPosition(row, col + 1);
+
 				return winPos;
 			}
 		} else if (col == END_BOX) {
 
 			if (mBoard[row][col] == mBoard[row][col - 1]
 					&& mBoard[row][col - 1] == mBoard[row][col - 2]) {
-				winPos[1] = convertRowColumnToPosition(row, col -1);
-				winPos[2] = convertRowColumnToPosition(row, col -2);
-				
+				winPos[1] = convertRowColumnToPosition(row, col - 1);
+				winPos[2] = convertRowColumnToPosition(row, col - 2);
+
 				return winPos;
 			}
 
@@ -303,9 +390,9 @@ public class TicTacToeGameEngine {
 		if (row == BEGIN_BOX) {
 			if (mBoard[row][col] == mBoard[row + 1][col]
 					&& mBoard[row + 1][col] == mBoard[row + 2][col]) {
-				winPos[1] = convertRowColumnToPosition(row +1, col);
-				winPos[2] = convertRowColumnToPosition(row +2, col);
-				
+				winPos[1] = convertRowColumnToPosition(row + 1, col);
+				winPos[2] = convertRowColumnToPosition(row + 2, col);
+
 				return winPos;
 			}
 
@@ -314,7 +401,7 @@ public class TicTacToeGameEngine {
 					&& mBoard[row][col] == mBoard[row + 1][col]) {
 				winPos[1] = convertRowColumnToPosition(row - 1, col);
 				winPos[2] = convertRowColumnToPosition(row + 1, col);
-				
+
 				return winPos;
 			}
 
@@ -322,9 +409,9 @@ public class TicTacToeGameEngine {
 
 			if (mBoard[row][col] == mBoard[row - 1][col]
 					&& mBoard[row][col] == mBoard[row - 2][col]) {
-				winPos[1] = convertRowColumnToPosition(row -1, col);
-				winPos[2] = convertRowColumnToPosition(row -2, col);
-				
+				winPos[1] = convertRowColumnToPosition(row - 1, col);
+				winPos[2] = convertRowColumnToPosition(row - 2, col);
+
 				return winPos;
 			}
 
@@ -334,47 +421,40 @@ public class TicTacToeGameEngine {
 
 		if (row == col) {
 
-			if (CENTER_DIAGNAL == row && col == CENTER_DIAGNAL) {				
-				 if(isBackDiagnalMatches()){
-					
+			if (CENTER_DIAGNAL == row && col == CENTER_DIAGNAL) {
+				if (isBackDiagnalMatches()) {
+
 					winPos[0] = convertRowColumnToPosition(0, 2);
-					winPos[1] = convertRowColumnToPosition(1,1);
-					winPos[2] = convertRowColumnToPosition(2, 0);	
-					
+					winPos[1] = convertRowColumnToPosition(1, 1);
+					winPos[2] = convertRowColumnToPosition(2, 0);
+
 				}
-					
-				
 
 			}
-			if (isForwardDiagnalMatches() ) {	
+			if (isForwardDiagnalMatches()) {
 				winPos[0] = convertRowColumnToPosition(0, 0);
 				winPos[1] = convertRowColumnToPosition(1, 1);
-				winPos[2] = convertRowColumnToPosition(2, 2);				
+				winPos[2] = convertRowColumnToPosition(2, 2);
 				return winPos;
-				} 
-		
+			}
 
 		}
 
 		// check Backward diagonal
 
 		if (row == BACKWARD_DIAGONAL_ROW && col == BACKWARD_DIAGONAL_COL
-				|| col == BACKWARD_DIAGONAL_ROW && row == BACKWARD_DIAGONAL_COL){
-			
-			winPos[0] = convertRowColumnToPosition(0, 2);
-			winPos[1] = convertRowColumnToPosition(1,1);
-			winPos[2] = convertRowColumnToPosition(2, 0);	
-			
-			return winPos;
-			
-		}
+				|| col == BACKWARD_DIAGONAL_ROW && row == BACKWARD_DIAGONAL_COL) {
 
-	
+			winPos[0] = convertRowColumnToPosition(0, 2);
+			winPos[1] = convertRowColumnToPosition(1, 1);
+			winPos[2] = convertRowColumnToPosition(2, 0);
+
+			return winPos;
+
+		}
 
 		return winPos;
 	}
-	
-	
 
 	private boolean isBackDiagnalMatches() {
 
